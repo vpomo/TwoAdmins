@@ -1,6 +1,5 @@
 pragma solidity ^0.4.24;
 
-
 library SafeMath {
     function mul(uint256 a, uint256 b) internal pure returns (uint256) {
         uint256 c = a * b;
@@ -338,6 +337,7 @@ contract TwoAdmins is Ownable, MintableToken {
     event Burn(address indexed burner, uint256 value);
     event DisableTransfer(address indexed admin);
     event EnableTransfer(address indexed admin);
+    event SendToken(address indexed from, address indexed to, uint256 value);
 
     constructor(address _owner) public
     {
@@ -382,6 +382,7 @@ contract TwoAdmins is Ownable, MintableToken {
         _result = false;
         require(_walletTo != address(0));
         mint(_walletTo, _tokens, owner);
+        emit SendToken(msg.sender, _walletTo, _tokens);
         _result = true;
     }
 
