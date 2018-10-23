@@ -36,7 +36,7 @@ contract('TwoAdmins', (accounts) => {
 
         await contract.buyTokens(accounts[2],{from:accounts[2], value:buyWei});
 
-       var balanceAccountTwoAfter = await contract.balanceOf(accounts[2]);
+        var balanceAccountTwoAfter = await contract.balanceOf(accounts[2]);
         assert.isTrue(balanceAccountTwoBefore < balanceAccountTwoAfter);
         assert.equal(0, balanceAccountTwoBefore);
         assert.equal(rate*buyWei, balanceAccountTwoAfter);
@@ -60,21 +60,16 @@ contract('TwoAdmins', (accounts) => {
         assert.equal(0, balanceAccountOneBefore);
         await contract.buyTokens(accounts[1],{from:accounts[1], value:buyWei});
         var balanceAccountOneAfter = await contract.balanceOf(accounts[1]);
-        //console.log("balanceAccountOneAfter", balanceAccountOneAfter);
         await contract.transfer(contract.address,balanceAccountOneAfter,{from:accounts[1]});
         var balanceContractBefore = await contract.balanceOf(contract.address);
         assert.equal(buyWei*rate, balanceContractBefore);
-        //console.log("balanceContractBefore = " + balanceContractBefore);
         var balanceAccountAfter = await contract.balanceOf(accounts[1]);
         assert.equal(0, balanceAccountAfter);
         var balanceOwnerBefore = await contract.balanceOf(owner);
         await contract.claimTokens(contract.address,{from:accounts[0]});
         var balanceContractAfter = await contract.balanceOf(contract.address);
-        //console.log("balanceContractAfter = " + balanceContractAfter);
         assert.equal(0, balanceContractAfter);
         var balanceOwnerAfter = await contract.balanceOf(owner);
-        //console.log("balanceOwnerBefore = " + Number(balanceOwnerBefore));
-        //console.log("balanceOwnerAfter = " + Number(balanceOwnerAfter));
         assert.equal(true, Number(balanceOwnerBefore) < Number(balanceOwnerAfter));
     });
 
@@ -89,6 +84,30 @@ contract('TwoAdmins', (accounts) => {
         assert.equal(true, Number(balanceOwnerBefore) > Number(balanceOwnerAfter));
         assert.equal(true, Number(totalSupplyBefore) > Number(totalSupplyAfter));
     });
+
+    it('verification send tokens', async ()  => {
+        var amountToken = 10**18;
+        var balanceSevenBefore = await contract.balanceOf(accounts[7]);
+        await contract.sendTokens(accounts[7], amountToken);
+        var balanceSevenAfter = await contract.balanceOf(accounts[7]);
+        assert.equal(true, Number(balanceSevenAfter) > Number(balanceSevenBefore));
+        assert.equal(0, balanceSevenBefore);
+        assert.equal(amountToken, balanceSevenAfter);
+        // console.log("balanceSevenBefore", Number(balanceSevenBefore));
+        // console.log("balanceSevenAfter", Number(balanceSevenAfter));
+    });
+
+    it('verification set administrator', async ()  => {
+        var adminOne = await contract.administratorOne.call();
+        //console.log("adminOne", adminOne);
+        assert.equal("0x0000000000000000000000000000000000000000", adminOne);
+        await contract.changeAdmin(1, accounts[6]);
+        adminOne = await contract.administratorOne.call();
+        assert.equal(accounts[6], adminOne);
+        //console.log("adminOne", adminOne);
+        await contract.disableTransfer({from:accounts[6]});
+    });
+
 });
 
 
