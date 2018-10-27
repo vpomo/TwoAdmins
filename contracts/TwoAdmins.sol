@@ -349,7 +349,7 @@ contract TwoAdmins is Ownable, MintableToken {
     {
         require(_owner != address(0));
         owner = _owner;
-        owner = msg.sender; // for test's
+        //owner = msg.sender; // for test's
         transfersEnabled = true;
         mintingFinished = false;
         totalSupply = INITIAL_SUPPLY;
