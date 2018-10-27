@@ -1,5 +1,11 @@
 pragma solidity ^0.4.24;
 
+/**
+* XGN is token issued by Golden Currency.
+* XGN can be exchanged for Golden cash, each Golden is backed by 0.025 grams of gold.
+* Terms of such exchange are available at https://goldencurrency.money
+*/
+
 library SafeMath {
     function mul(uint256 a, uint256 b) internal pure returns (uint256) {
         uint256 c = a * b;
@@ -263,8 +269,8 @@ contract Ownable {
  */
 
 contract MintableToken is StandardToken, Ownable {
-    string public constant name = "Two Admins Token";
-    string public constant symbol = "TAT";
+    string public constant name = "Golden";
+    string public constant symbol = "XGN";
     uint8 public constant decimals = 18;
     bool public mintingFinished;
 
